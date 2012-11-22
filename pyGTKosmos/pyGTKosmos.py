@@ -12,6 +12,7 @@ import gtk
 import os.path
 import encodings.idna
 import encodings.ascii
+import re
 
 VER="0.5"
 NAME="PyGTKosmos"
@@ -79,11 +80,11 @@ class PyCosmos:
                         except:
                                 tel = ""
                                 pas = ""
-                        dst = "0030" + dst_entry.get_text()
+#                        dst = "0030" + dst_entry.get_text()
+                        dst = dst_entry.get_text()
                         msg = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-                        try:
-                            testdst = str(int(dst))
-                        except:
+
+                        if re.search('[a-zA-Z.;?<>-]+',dst):
                             text= "Destination number is not valid! (letters)"
                             statusbar.push(0, text)
                             return 1
