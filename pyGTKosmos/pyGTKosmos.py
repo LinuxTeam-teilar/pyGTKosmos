@@ -88,10 +88,6 @@ class PyCosmos:
                             text= "Destination number is not valid! (letters)"
                             statusbar.push(0, text)
                             return 1
-                        if not len(dst) == 14:
-                            text = "Destination number is not valid! (length)"
-                            statusbar.push(0, text)
-                            return 1
                         if not tel.startswith('69'):
                             text = "Wrong username. Check your options!"
                             statusbar.push(0, text)
