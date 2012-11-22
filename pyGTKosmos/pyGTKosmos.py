@@ -22,15 +22,15 @@ class PyCosmos:
                         if buffer.get_char_count() > 140:
                                 iter = buffer.get_end_iter()
                                 buffer.backspace(iter, True, True)
-		def about_on_clicked(self, widget):
-			about = gtk.AboutDialog()
-			about.set_program_name(NAME)
-			about.set_version(VER)
-			about.set_copyright("(c) George Vasilakos")
-			about.set_comments("This script allows sending SMS using\nthe MyCosmos portal of COSMOTE in\nGreece. This script is a fork of\nPyCosmos 0.4 authored by Sakis Kanaris.")
-			about.set_website("http://pycosmos.sourceforge.net/")
-			about.run()
-			about.destroy()
+                def about_on_clicked(self, widget):
+                        about = gtk.AboutDialog()
+                        about.set_program_name(NAME)
+                        about.set_version(VER)
+                        about.set_copyright("(c) George Vasilakos")
+                        about.set_comments("This script allows sending SMS using\nthe MyCosmos portal of COSMOTE in\nGreece. This script is a fork of\nPyCosmos 0.4 authored by Sakis Kanaris.")
+                        about.set_website("http://pycosmos.sourceforge.net/")
+                        about.run()
+                        about.destroy()
                 def options(self, widget, window):
                         opt_win= gtk.Dialog(NAME + " options", window, gtk.DIALOG_MODAL, None)
                         opt_win.add_button("Cancel", 0)
@@ -72,7 +72,7 @@ class PyCosmos:
                         try:
                                 f = open(conf_file, 'r')
                                 tel = f.readline()
-                        	tel = tel[0:-1]
+                                tel = tel[0:-1]
                                 pas = f.readline()
                                 pas = pas[0:-1]
                                 f.close()
@@ -199,7 +199,7 @@ class PyCosmos:
                         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
                         window.set_title(NAME + " " + VER)
                         window.set_size_request(300, 178)
-			window.set_position(gtk.WIN_POS_CENTER)
+                        window.set_position(gtk.WIN_POS_CENTER)
                         window.connect("delete_event", lambda w,e: gtk.main_quit())
                         global dst_entry
                         global buffer
@@ -233,8 +233,8 @@ class PyCosmos:
                         opt_button = gtk.Button("Options")
                         opt_button.connect("clicked", self.options, window)
                         vbox1.pack_start(opt_button, False, False, 2)
-			about_button = gtk.Button("About")
-			about_button.connect("clicked", self.about_on_clicked)
+                        about_button = gtk.Button("About")
+                        about_button.connect("clicked", self.about_on_clicked)
                         vbox1.pack_start(about_button, False, False, 2)
                         hbox1.pack_start(vbox1, False, False, 2)
                         textview = gtk.TextView()
