@@ -216,7 +216,7 @@ class PyCosmos:
                         hbox = gtk.HBox(False, 2)
                         dst_label = gtk.Label("Send to : ")
                         hbox.pack_start(dst_label, False, False, 2)
-                        dst_entry = gtk.Entry(max=14)
+                        dst_entry = gtk.Entry(max=109) # 10 numbers * 10 free sms + 9 seperators
                         dst_entry.set_text("69")
                         hbox.pack_start(dst_entry, False, False, 2)
                         button = gtk.Button("  Send  ")
