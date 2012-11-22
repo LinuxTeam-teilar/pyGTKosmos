@@ -82,12 +82,6 @@ class PyCosmos:
                         dst = "0030" + dst_entry.get_text()
                         msg = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
                         try:
-                            testtel = str(int(tel))
-                        except:
-                            text = "Wrong username (contain letters). Check your options!"
-                            statusbar.push(0, text)
-                            return 1
-                        try:
                             testdst = str(int(dst))
                         except:
                             text= "Destination number is not valid! (letters)"
