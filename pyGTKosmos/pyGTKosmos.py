@@ -88,10 +88,6 @@ class PyCosmos:
                             text= "Destination number is not valid! (letters)"
                             statusbar.push(0, text)
                             return 1
-                        if not dst.startswith('003069'):
-                            text = "Destination number is not valid!"
-                            statusbar.push(0, text)
-                            return 1
                         h0 = httplib2.Http()
                         location0 = "http://mail.mycosmos.gr/mycosmos/login.aspx"
                         resp0, content0 = h0.request(location0, "GET")
