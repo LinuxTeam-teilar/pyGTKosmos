@@ -84,8 +84,16 @@ class PyCosmos:
                         dst = dst_entry.get_text()
                         msg = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
 
-                        if re.search('[a-zA-Z.;?<>-]+',dst):
-                            text= "Destination number is not valid! (letters)"
+                        # regular expression:
+                        # start with maybe 00 or '+' for any number
+                        # for Greece    : (3069 OR 69 ) + 8 digits.
+                        # for not Greece: + 1 digit nonzero + digits.
+                        patternOFnumber='(00|[\+])?((((30)?69[0-9]{8})|(?!3069)(?!69)[1-9][0-9]{1,3}[0-9]{7,12}))'
+
+                        # up to 10 numbers separated with comma
+                        pattern = "^" + patternOFnumber + "(,"  +  patternOFnumber + "){0,9}" +"$"
+                        if not re.search(pattern,dst):
+                            text= "Destination number is not valid!"
                             statusbar.push(0, text)
                             return 1
                         h0 = httplib2.Http()
