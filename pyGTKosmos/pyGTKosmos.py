@@ -12,6 +12,7 @@ import gtk
 import os.path
 import encodings.idna
 import encodings.ascii
+import re
 
 VER="0.5"
 NAME="PyGTKosmos"
@@ -22,15 +23,15 @@ class PyCosmos:
                         if buffer.get_char_count() > 140:
                                 iter = buffer.get_end_iter()
                                 buffer.backspace(iter, True, True)
-		def about_on_clicked(self, widget):
-			about = gtk.AboutDialog()
-			about.set_program_name(NAME)
-			about.set_version(VER)
-			about.set_copyright("(c) George Vasilakos")
-			about.set_comments("This script allows sending SMS using\nthe MyCosmos portal of COSMOTE in\nGreece. This script is a fork of\nPyCosmos 0.4 authored by Sakis Kanaris.")
-			about.set_website("http://pycosmos.sourceforge.net/")
-			about.run()
-			about.destroy()
+                def about_on_clicked(self, widget):
+                        about = gtk.AboutDialog()
+                        about.set_program_name(NAME)
+                        about.set_version(VER)
+                        about.set_copyright("(c) George Vasilakos")
+                        about.set_comments("This script allows sending SMS using\nthe MyCosmos portal of COSMOTE in\nGreece. This script is a fork of\nPyCosmos 0.4 authored by Sakis Kanaris.")
+                        about.set_website("http://pycosmos.sourceforge.net/")
+                        about.run()
+                        about.destroy()
                 def options(self, widget, window):
                         opt_win= gtk.Dialog(NAME + " options", window, gtk.DIALOG_MODAL, None)
                         opt_win.add_button("Cancel", 0)
@@ -72,41 +73,27 @@ class PyCosmos:
                         try:
                                 f = open(conf_file, 'r')
                                 tel = f.readline()
-                        	tel = tel[0:-1]
+                                tel = tel[0:-1]
                                 pas = f.readline()
                                 pas = pas[0:-1]
                                 f.close()
                         except:
                                 tel = ""
                                 pas = ""
-                        dst = "0030" + dst_entry.get_text()
+#                        dst = "0030" + dst_entry.get_text()
+                        dst = dst_entry.get_text()
                         msg = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-                        try:
-                            testtel = str(int(tel))
-                        except:
-                            text = "Wrong username (contain letters). Check your options!"
-                            statusbar.push(0, text)
-                            return 1
-                        try:
-                            testdst = str(int(dst))
-                        except:
-                            text= "Destination number is not valid! (letters)"
-                            statusbar.push(0, text)
-                            return 1
-                        if not len(tel) == 10:
-                            text = "Wrong username (not 10 characters). Check your options!"
-                            statusbar.push(0, text)
-                            return 1
-                        if not len(dst) == 14:
-                            text = "Destination number is not valid! (length)"
-                            statusbar.push(0, text)
-                            return 1
-                        if not tel.startswith('69'):
-                            text = "Wrong username. Check your options!"
-                            statusbar.push(0, text)
-                            return 1
-                        if not dst.startswith('003069'):
-                            text = "Destination number is not valid!"
+
+                        # regular expression:
+                        # start with maybe 00 or '+' for any number
+                        # for Greece    : (3069 OR 69 ) + 8 digits.
+                        # for not Greece: + 1 digit nonzero + digits.
+                        patternOFnumber='(00|[\+])?((((30)?69[0-9]{8})|(?!3069)(?!69)[1-9][0-9]{1,3}[0-9]{7,12}))'
+
+                        # up to 10 numbers separated with comma
+                        pattern = "^" + patternOFnumber + "(,"  +  patternOFnumber + "){0,9}" +"$"
+                        if not re.search(pattern,dst):
+                            text= "Destination number is not valid!"
                             statusbar.push(0, text)
                             return 1
                         h0 = httplib2.Http()
@@ -199,7 +186,7 @@ class PyCosmos:
                         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
                         window.set_title(NAME + " " + VER)
                         window.set_size_request(300, 178)
-			window.set_position(gtk.WIN_POS_CENTER)
+                        window.set_position(gtk.WIN_POS_CENTER)
                         window.connect("delete_event", lambda w,e: gtk.main_quit())
                         global dst_entry
                         global buffer
@@ -216,7 +203,7 @@ class PyCosmos:
                         hbox = gtk.HBox(False, 2)
                         dst_label = gtk.Label("Send to : ")
                         hbox.pack_start(dst_label, False, False, 2)
-                        dst_entry = gtk.Entry(max=14)
+                        dst_entry = gtk.Entry(max=109) # 10 numbers * 10 free sms + 9 seperators
                         dst_entry.set_text("69")
                         hbox.pack_start(dst_entry, False, False, 2)
                         button = gtk.Button("  Send  ")
@@ -233,8 +220,8 @@ class PyCosmos:
                         opt_button = gtk.Button("Options")
                         opt_button.connect("clicked", self.options, window)
                         vbox1.pack_start(opt_button, False, False, 2)
-			about_button = gtk.Button("About")
-			about_button.connect("clicked", self.about_on_clicked)
+                        about_button = gtk.Button("About")
+                        about_button.connect("clicked", self.about_on_clicked)
                         vbox1.pack_start(about_button, False, False, 2)
                         hbox1.pack_start(vbox1, False, False, 2)
                         textview = gtk.TextView()
