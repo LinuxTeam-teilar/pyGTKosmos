@@ -177,8 +177,9 @@ class PyCosmos:
                 if status == "True":
                     statusbar.push(0, "Message sent successfully!")
 
-                    ## reduce counter
-                    sms_counter -= 1
+                    ## reduce counter                    
+                    for x in range (0, re.sub("\d+", "", dst).__len__()+1):
+                        sms_counter -= 1
                     isms_label.set_text( str(sms_counter) + " left")
 
                     try:
